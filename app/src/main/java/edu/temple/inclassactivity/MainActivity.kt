@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
@@ -14,33 +15,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(::someVar.isInitalized)
+
+
+        val imagesViewModel = ViewModelProvider(this)[ImagesViewModel :: class.java]
+
 
         // Fetch images into IntArray called imageArray
         val typedArray = resources.obtainTypedArray(R.array.image_ids)
-        val imageArray = IntArray(typedArray.length()) {typedArray.getResourceId(it, 0)}
+        val imageArray = IntArray(typedArray.length()) { typedArray.getResourceId(it, 0) }
         typedArray.recycle()
 
-        val fragment1 = ImageDisplayFragment.newInstance(imageArray)
+        if(supportFragmentManager.findFragmentById(R.id.fragmentContainerView)!is ImageDisplayFragment)
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.fragmentContainerView, ImageDisplayFragment())
+                    .addToBackStack(null)
+                    .setReorderingAllowed(true)
+                    .commit()
+
+
+
+    findViewById<Button>(R.id.button).setOnClickListener{
+
+
+    }
+
+
 
         // Attach an instance of ImageDisplayFragment using factory method
 
-        if (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) !is ImageDisplayFragment)
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragmentContainerView, ImageDisplayFragment())
-                .addToBackStack(null)
-                .setReorderingAllowed(true)
-                .commit()
+        (supportFragmentManager.findFragmentById(R.id.imageView) as ImageDisplayFragment)
+
+
 
     }
-
-    fun setImage(_image: IntArray){
-        images[position] = _image
-
-        (view as RecyclerView).adapter.notifyDataSetChanged()
-    }
-
-
-
 }
