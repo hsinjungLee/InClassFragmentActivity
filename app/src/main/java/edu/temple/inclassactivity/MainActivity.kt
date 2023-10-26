@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         val imageArray = IntArray(typedArray.length()) { typedArray.getResourceId(it, 0) }
         typedArray.recycle()
 
+        imagesViewModel.setImages(imageArray)
+
         if(supportFragmentManager.findFragmentById(R.id.fragmentContainerView)!is ImageDisplayFragment)
                 supportFragmentManager.beginTransaction()
                     .add(R.id.fragmentContainerView, ImageDisplayFragment())
